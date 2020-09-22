@@ -1,0 +1,17 @@
+{
+  "name": "nodeJS-express-redis",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "mocha"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "redis": "^3.0.2"
+  },
+  "devDependencies": {
+    "mocha": "^8.1.3"
+  }
+}
