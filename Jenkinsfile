@@ -1,18 +1,24 @@
 pipeline {
-  agent any
-  stages {
-    stage('Install') {
-      steps {
-        sh 'sh \'yarn install\''
-      }
+    agent any
+
+    tools {
+        nodejs '12.18.4'
     }
 
-    stage('Test') {
-      agent any
-      steps {
-        sh 'sh \'yarn test\''
-      }
+    options {
+        timeout(time: 2, unit: 'MINUTES')
     }
 
-  }
+    stages {
+        stage('Install') {
+            steps {
+                sh 'yarn install'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'yarn test'
+            }
+        }
+    }
 }
