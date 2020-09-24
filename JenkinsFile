@@ -10,7 +10,7 @@ pipeline {
     }
 
     stages {
-        stage('Install') {
+        stage('Install from yarn') {
             when {
                 branch 'master'
             }
