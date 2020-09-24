@@ -11,11 +11,17 @@ pipeline {
 
     stages {
         stage('Install from yarn a') {
+            when {
+                branch 'master'
+            }
             steps {
                 sh 'yarn install'
             }
         }
-        stage('TestsA') {
+        stage('Test') {
+            when {
+                branch 'master'
+            }
             steps {
                 sh 'yarn test'
             }
