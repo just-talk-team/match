@@ -10,18 +10,12 @@ pipeline {
     }
 
     stages {
-        stage('Install from yarn a') {
-            when {
-                branch 'master'
-            }
+        stage('Install from yarn pullrequest') {
             steps {
                 sh 'yarn install'
             }
         }
         stage('Test') {
-            when {
-                branch 'master'
-            }
             steps {
                 sh 'yarn test'
             }
