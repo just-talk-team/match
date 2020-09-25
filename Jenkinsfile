@@ -30,7 +30,7 @@ pipeline {
         }
         stage('Continuos Deployment'){
             when { 
-                branch 'master'
+                branch 'feature/scm'
             }
             steps {
                 sh 'echo Continuos Deployment'
