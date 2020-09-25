@@ -14,8 +14,7 @@ pipeline {
             when { 
                 anyOf {
                     allOf{
-                        branch 'master';
-                        buildingTag() 
+                        branch 'master'
                     };
                     allOf {
                         branch pattern: "PR-\\d+", comparator: "REGEXP";
@@ -31,8 +30,7 @@ pipeline {
             when { 
                 anyOf {
                     allOf{
-                        branch 'master';
-                        buildingTag() 
+                        branch 'master'
                     };
                     allOf {
                         branch pattern: "PR-\\d+", comparator: "REGEXP";
@@ -58,8 +56,7 @@ pipeline {
         stage('Continuos Deployment'){
             when { 
                 allOf{
-                    branch 'master';
-                    buildingTag() 
+                    branch 'master'
                 }
             }
             steps {
