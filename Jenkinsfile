@@ -10,14 +10,30 @@ pipeline {
     }
 
     stages {
-        stage('Install tesxxxx') {
+        stage('Install') {
             steps {
                 sh 'yarn install'
             }
         }
-        stage('Test') {
+        stage('Continuos Integration') {
             steps {
                 sh 'yarn test'
+            }
+        }
+        stage('Continuos Delivery'){
+            when { 
+                branch pattern: "^(feature|fix)", comparator: "REGEXP"
+            }
+            steps {
+                sh 'echo Continuos Delivery'
+            }
+        }
+        stage('Continuos Deployment'){
+            when { 
+                branch 'master'
+            }
+            steps {
+                sh 'echo Continuos Deployment'
             }
         }
     }
