@@ -12,6 +12,7 @@ pipeline {
     stages {
         stage('Install test R') {
             steps {
+                sh "echo ${env.BRANCH_NAME}"
                 sh 'yarn install'
             }
         }
