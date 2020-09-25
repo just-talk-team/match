@@ -13,7 +13,7 @@ pipeline {
         stage('Install') {
             when { 
                 allOf {
-                    branch pattern: "PR*", caseSensitive: true;
+                    branch pattern: "PR-\\d+", comparator: "REGEXP";
                     changeRequest target: 'master' 
                 }
             }
@@ -24,7 +24,7 @@ pipeline {
         stage('Continuos Integration') {
             when { 
                 allOf {
-                    branch pattern: "PR*", caseSensitive: true;
+                    branch pattern: "PR-\\d+", comparator: "REGEXP";
                     changeRequest target: 'master' 
                 }
             }
@@ -35,7 +35,7 @@ pipeline {
         stage('Continuos Delivery'){
             when { 
                 allOf {
-                    branch pattern: "PR*", caseSensitive: true;
+                    branch pattern: "PR-\\d+", comparator: "REGEXP";
                     changeRequest target: 'master' 
                 }
             }
