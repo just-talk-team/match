@@ -12,9 +12,15 @@ pipeline {
     stages {
         stage('Install') {
             when { 
-                allOf {
-                    branch pattern: "PR-\\d+", comparator: "REGEXP";
-                    changeRequest target: 'master' 
+                anyOf {
+                    allOf{
+                        branch 'master';
+                        buildingTag() 
+                    };
+                    allOf {
+                        branch pattern: "PR-\\d+", comparator: "REGEXP";
+                        changeRequest target: 'master' 
+                    }
                 }
             }
             steps {
@@ -23,9 +29,15 @@ pipeline {
         }
         stage('Continuos Integration') {
             when { 
-                allOf {
-                    branch pattern: "PR-\\d+", comparator: "REGEXP";
-                    changeRequest target: 'master' 
+                anyOf {
+                    allOf{
+                        branch 'master';
+                        buildingTag() 
+                    };
+                    allOf {
+                        branch pattern: "PR-\\d+", comparator: "REGEXP";
+                        changeRequest target: 'master' 
+                    }
                 }
             }
             steps {
