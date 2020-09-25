@@ -10,7 +10,7 @@ pipeline {
     }
 
     stages {
-        stage('Install test') {
+        stage('Install testSSS') {
             steps {
                 sh 'yarn install'
             }
