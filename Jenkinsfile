@@ -12,10 +12,10 @@ pipeline {
     stages {
         stage('Install') {
             when { 
-                branch pattern: "PR*", caseSensitive: true
-            }
-            when { 
-                changeRequest target: 'master' 
+                allOf {
+                    branch pattern: "PR*", caseSensitive: true;
+                    changeRequest target: 'master' 
+                }
             }
             steps {
                 sh 'yarn install'
@@ -23,10 +23,10 @@ pipeline {
         }
         stage('Continuos Integration') {
             when { 
-                branch pattern: "PR*", caseSensitive: true
-            }
-            when { 
-                changeRequest target: 'master' 
+                allOf {
+                    branch pattern: "PR*", caseSensitive: true;
+                    changeRequest target: 'master' 
+                }
             }
             steps {
                 sh 'yarn test'
@@ -34,10 +34,10 @@ pipeline {
         }
         stage('Continuos Delivery'){
             when { 
-                branch pattern: "PR*", caseSensitive: true
-            }
-            when { 
-                changeRequest target: 'master' 
+                allOf {
+                    branch pattern: "PR*", caseSensitive: true;
+                    changeRequest target: 'master' 
+                }
             }
             steps {
                 sh 'echo Continuos Delivery'
@@ -45,10 +45,10 @@ pipeline {
         }
         stage('Continuos Deployment'){
             when { 
-                branch 'master'
-            }
-            when {
-                buildingTag()
+                allOf{
+                    branch 'master';
+                    buildingTag() 
+                }
             }
             steps {
                 sh 'echo Continuos Deployment'
