@@ -20,7 +20,7 @@ pipeline {
                 sh 'yarn test'
             }
         }
-        stage('Continuos Delivery'){
+        stage('Continuos Deliverys'){
             when { 
                 branch pattern: "^(feature|fix)", comparator: "REGEXP"
             }
