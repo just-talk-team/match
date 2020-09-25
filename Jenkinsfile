@@ -6,18 +6,52 @@ pipeline {
     }
 
     options {
-        timeout(time: 2, unit: 'MINUTES')
+        timeout(time: 10, unit: 'MINUTES')
     }
 
     stages {
         stage('Install') {
+            when { 
+                allOf {
+                    branch pattern: "PR-\\d+", comparator: "REGEXP";
+                    changeRequest target: 'master' 
+                }
+            }
             steps {
                 sh 'yarn install'
             }
         }
-        stage('Test') {
+        stage('Continuos Integration') {
+            when { 
+                allOf {
+                    branch pattern: "PR-\\d+", comparator: "REGEXP";
+                    changeRequest target: 'master' 
+                }
+            }
             steps {
                 sh 'yarn test'
+            }
+        }
+        stage('Continuos Delivery'){
+            when { 
+                allOf {
+                    branch pattern: "PR-\\d+", comparator: "REGEXP";
+                    changeRequest target: 'master' 
+                }
+            }
+            steps {
+                sh 'echo Continuos Delivery'
+            }
+        }
+        stage('Continuos Deployment'){
+            when { 
+                allOf{
+                    branch 'master';
+                    buildingTag() 
+                }
+            }
+            steps {
+                sh 'echo Continuos Deployment'
             }
         }
     }
