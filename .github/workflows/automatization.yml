@@ -39,7 +39,7 @@ jobs:
     - name: Push Branch
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      run: git push heroku ${{ github.ref }}:master 
+      run: git push -f heroku ${{ github.ref }}:master 
     if: ${{ github.event_name == 'pull_request' }}
 
   Continuos-Deployment:
