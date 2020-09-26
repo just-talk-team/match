@@ -32,10 +32,12 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME_MATCH_DEVELOPMENT }}.git
+    - name: Branch
+      run: echo ${{ github.head_ref }}
     - name: Push Branch
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      run: git push heroku feature/pipeline_continuos-delivery:master 
+      run: git push heroku ${{ github.head_ref }}:master 
     if: ${{ github.event_name == 'pull_request' }}
 
   Continuos-Deployment:
