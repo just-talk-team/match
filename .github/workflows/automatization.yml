@@ -27,15 +27,17 @@ jobs:
     needs: Continuos-Integration
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Branch
-      run: echo ${{ github.head_ref }} ${{ github.ref }}
-    - name: List Branch
-      run: git branch -a
-    - name: Push Branch
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      run: git push -f https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME_MATCH_DEVELOPMENT }}.git master 
+      - uses: actions/checkout@v2
+      - name: Branch
+        run: echo ${{ github.head_ref }} ${{ github.ref }}
+      - name: List Branch
+        run: git branch -a
+      - uses: onekiloparsec/heroku-node-deploy-subfolder@v1.0.4
+        with:
+          api_key: ${{secrets.HEROKU_API_KEY}}
+          app_name: ${{ secrets.HEROKU_APP_NAME_MATCH_DEVELOPMENT }}
+          branch: ${{ github.head_ref }}
+          subfolder: ""   
     if: ${{ github.event_name == 'pull_request' }}
 
   Continuos-Deployment:
