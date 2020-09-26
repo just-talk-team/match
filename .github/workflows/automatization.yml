@@ -37,7 +37,6 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME_MATCH_DEVELOPMENT }}
           heroku_email: "anthony.bravo.berrio@gmail.com"
-          branch: ${{ github.ref }}
     if: ${{ github.event_name == 'pull_request' }}
 
   Continuos-Deployment:
