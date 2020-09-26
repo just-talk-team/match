@@ -1,13 +1,6 @@
 name: automatization
 
-on: 
-  push:
-    branches:
-        - "master"
-  pull_request:
-    branches:
-        - "feature*"
-        - "fix*"
+on: [push, pull_request]
 
 jobs:
   Continuos-Integration:
@@ -28,12 +21,12 @@ jobs:
     needs: Continuos-Integration
     runs-on: ubuntu-latest
     steps:
-        - run: echo Continuos-Integration
-    if: ${{ github.event_name == 'pull_request' }}  
+      - run: echo Continuos-Integration
+    if: ${{ github.event_name == 'pull_request' }}
 
   Continuos-Deployment:
     needs: Continuos-Integration
     runs-on: ubuntu-latest
     steps:
-        - run: echo Continuos-Deployment
-    if: ${{ github.event_name == 'push' }}
+      - run: echo Continuos-Deployment
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
