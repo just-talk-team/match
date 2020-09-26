@@ -6,7 +6,7 @@
     "yarn": "1.x"
   },
   "scripts": {
-    "heroku-prebuild": "npm install pm2 -g",
+    "heroku-prebuild": "yarn global add pm2",
     "test": "mocha",
     "dev": "pm2-runtime start ecosystem.config.js",
     "start": "pm2-runtime start ecosystem.config.js --env production"
