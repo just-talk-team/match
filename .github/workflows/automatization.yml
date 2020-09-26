@@ -28,13 +28,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
-
-      - name: Add remote origin
-        run: git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME_MATCH_DEVELOPMENT }}.git
+        uses: actions/checkout@v2
 
       - name: Deploy to Heroku
-        run: git push --force heroku `git subtree split --prefix server HEAD`:master
+        uses: akhileshns/heroku-deploy@v3.5.6
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME_MATCH_DEVELOPMENT }}
+          heroku_email: "YOUR EMAIL"
+          branch: ${{ github.head_ref }}
     if: ${{ github.event_name == 'pull_request' }}
 
   Continuos-Deployment:
