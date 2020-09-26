@@ -20,14 +20,14 @@ jobs:
           node-version: "12.x"
       - name: Install dependencies
         run: yarn --frozen-lockfile
-      - name: Continuos Integration
+      - name: Test
         run: yarn test
 
   Continuos-Delivery:
     needs: Continuos-Integration
     runs-on: ubuntu-latest
     steps:
-      - run: echo Continuos-Integration
+      - run: echo Continuos-Delivery
     if: ${{ github.event_name == 'pull_request' }}
 
   Continuos-Deployment:
