@@ -3,11 +3,11 @@ name: automatization
 on:
   push:
     branches:
-      - "master"
+      - master
   pull_request:
     branches:
-      - "feature**"
-      - "fix**"
+      - "feature/**"
+      - "fix/**"
 
 jobs:
   Continuos-Integration:
