@@ -1,0 +1,39 @@
+name: automatization
+
+on: 
+  push:
+    branches:
+        - "master"
+  pull_request:
+    branches:
+        - "feature*"
+        - "fix*"
+
+jobs:
+  Continuos-Integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Prepare nodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Continuos Integration
+        run: yarn test
+
+  Continuos-Delivery:
+    needs: Continuos-Integration
+    runs-on: ubuntu-latest
+    steps:
+        - run: echo Continuos-Integration
+    if: ${{ github.event_name == 'pull_request' }}  
+
+  Continuos-Deployment:
+    needs: Continuos-Integration
+    runs-on: ubuntu-latest
+    steps:
+        - run: echo Continuos-Deployment
+    if: ${{ github.event_name == 'push' }}
