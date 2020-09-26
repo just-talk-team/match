@@ -2,13 +2,18 @@
   "name": "match",
   "version": "1.0.0",
   "main": "index.js",
+  "engines": {
+    "yarn": "1.x"
+  },
   "scripts": {
-    "start": "node index.js",
-    "test": "mocha"
+    "test": "mocha",
+    "dev": "pm2-runtime start ecosystem.config.js",
+    "start": "pm2-runtime start ecosystem.config.js --env production"
   },
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
+    "pm2": "^4.4.1",
     "redis": "^3.0.2"
   },
   "devDependencies": {
