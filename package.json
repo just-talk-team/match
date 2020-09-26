@@ -2,11 +2,8 @@
   "name": "match",
   "version": "1.0.0",
   "main": "index.js",
-  "engines": {
-    "yarn": "1.x"
-  },
   "scripts": {
-    "heroku-prebuild": "yarn global add pm2 -g",
+    "heroku-prebuild": "npm install pm2 -g",
     "test": "mocha",
     "dev": "pm2-runtime start ecosystem.config.js",
     "start": "pm2-runtime start ecosystem.config.js --env production"
