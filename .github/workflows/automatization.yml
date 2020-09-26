@@ -32,12 +32,12 @@ jobs:
         run: echo ${{ github.head_ref }} ${{ github.ref }}
       - name: List Branch
         run: git branch -a
-      - uses: onekiloparsec/heroku-node-deploy-subfolder@v1.0.4
+      - uses: akhileshns/heroku-deploy@v3.5.6
         with:
-          api_key: ${{secrets.HEROKU_API_KEY}}
-          app_name: ${{ secrets.HEROKU_APP_NAME_MATCH_DEVELOPMENT }}
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME_MATCH_DEVELOPMENT }}
+          heroku_email: "anthony.bravo.berrio@gmail.com"
           branch: ${{ github.head_ref }}
-          subfolder: ""   
     if: ${{ github.event_name == 'pull_request' }}
 
   Continuos-Deployment:
