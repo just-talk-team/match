@@ -6,7 +6,7 @@ function productsApi(app) {
   app.use("/matches", router);
 
   router.get("/", async (req, res, next) => {
-    res.send("matches controller");
+    res.send("matches");
   });
 }
 
