@@ -29,10 +29,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Deploy to the test environment
+      - name: Deploy to the development environment
         uses: akhileshns/heroku-deploy@v3.5.6
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME_MATCH_DEVELOPMENT }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
     if: ${{ github.event_name == 'pull_request' }}
@@ -41,5 +41,12 @@ jobs:
     needs: Continuos-Integration
     runs-on: ubuntu-latest
     steps:
-      - run: echo Continuos-Deployment
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Deploy to the production environment
+        uses: akhileshns/heroku-deploy@v3.5.6
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME_MATCH_PRODUCTION }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
     if: ${{ github.event_name == 'push' }}
