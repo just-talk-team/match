@@ -1,8 +1,12 @@
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
 const port = process.env.PORT || 3000;
 
-const matchController = require("./app/controllers/match-controller");
+const matchController = require("./app/controllers/match.controller");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   let userInfo = req.header("user-agent");
