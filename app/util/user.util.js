@@ -7,4 +7,18 @@ function obtainAgeOfBirthday(birthday) {
   return Math.abs(age.getUTCFullYear() - 1970);
 }
 
-module.exports = obtainAgeOfBirthday;
+function compareMatches(firstList, secondList) {
+  var count = 0;
+
+  firstList.forEach((firstElement) => {
+    secondList.forEach((secondElement) => {
+      if (firstElement == secondElement) {
+        count++;
+      }
+    });
+  });
+
+  return count;
+}
+
+module.exports = { obtainAgeOfBirthday, compareMatches };

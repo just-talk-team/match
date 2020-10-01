@@ -3,7 +3,7 @@ const express = require("express");
 const { pushUserQueue, popUserQueue } = require("../services/redis.service");
 const match = require("../services/match.service");
 
-const obtainAgeOfBirthday = require("../util/user.util");
+const { obtainAgeOfBirthday } = require("../util/user.util");
 
 function matchController(app) {
   const router = express.Router();
