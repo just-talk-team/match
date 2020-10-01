@@ -20,6 +20,7 @@ function getMatches() {
       matches.creation = new Date();
       return matches;
     }
+    return JSON.parse(value);
   });
 }
 
