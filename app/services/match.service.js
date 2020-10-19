@@ -97,7 +97,7 @@ function rateUser(matches, user) {
             matches[userId].pairs[user.id] =
               matches[userId].pairs[user.id] + countPremium;
           }
-
+          
           if (user.user_type == "premium") {
             var countPremium = calculateCountPremium(user, matches[userId]);
             matches[user.id].pairs[userId] =
@@ -152,4 +152,4 @@ function calculateCountPremium(premium, free) {
   return count;
 }
 
-module.exports = match;
+module.exports = {match, rateUser};

@@ -12,3 +12,13 @@ describe("user.util", function () {
     });
   });
 });
+
+describe("user.util", function () {
+  describe("#compareMatches()", function () {
+    var firstList = ["Clásicas de cachimbos", "Among Us", "Covid19"]
+    var secondList = ["Clásicas de cachimbos", "Among Us"]
+    it("Escenario: Cuando el valor de count sea 2", function () {
+      assert.equal(compareMatches(firstList, secondList), 2);
+    });
+  });
+});
