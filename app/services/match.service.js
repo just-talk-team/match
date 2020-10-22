@@ -2,8 +2,8 @@ const rule = require("../configuration/rule.configuration");
 const {
   getMatches,
   setMatches,
-  deleteMatches,
   popUserQueue,
+  cleanAllDatabases,
 } = require("../services/redis.service");
 
 const { compareMatches } = require("../util/user.util");
@@ -11,26 +11,20 @@ const { compareMatches } = require("../util/user.util");
 async function match() {
   var matches = await getMatches();
   if (isTimeToMatch(matches)) {
-    console.log("time to match");
     const notificationPairs = selectPairs(matches);
     notifyPairs(notificationPairs);
-    deleteMatches();
+    cleanAllDatabases();
   } else {
-    console.log("not time to match");
     const user = await popUserQueue();
     if (user) {
       matches = addUserToMatches(matches, user);
       matches = rateUser(matches, user);
-      console.log(matches);
       setMatches(matches);
     }
   }
-
-  console.log("final match", matches);
 }
 
 function isTimeToMatch(matches) {
-  console.log(matches);
   if (
     new Date().getTime() - new Date(matches.creation).getTime() >=
     rule().time
@@ -43,15 +37,11 @@ function isTimeToMatch(matches) {
 
 function selectPairs(matches) {
   const notificationUsers = [];
-  const positionKeys = Object.keys(matches);
-  for (const position in positionKeys) {
-    const userId = positionKeys[position];
+  for (const userId in matches) {
     var bestPair = null;
     var bestPoint = 0;
 
-    const positionPairKeys = matches[userId].pairs;
-    for (const positionPair in positionPairKeys) {
-      const pair = positionPairKeys[positionPair];
+    for (const pair in matches[userId].pairs) {
       if (matches[pair]) {
         if (matches[userId].pairs[pair] > bestPoint) {
           bestPoint = matches[userId].pairs[pair];
@@ -71,18 +61,18 @@ function selectPairs(matches) {
 }
 
 function notifyPairs(notificationPairs) {
-  for (const pairs in notificationPairs) {
-    console.log("Notificacion a pareja: ", pairs);
-  }
+  notificationPairs.forEach((pair) => {
+    console.log(pair[0] + "-" + pair[1]);
+  });
 }
 
 function rateUser(matches, user) {
-  const positionKeys = Object.keys(matches);
-  for (const position in positionKeys) {
-    var userId = positionKeys[position];
+  for (const userId in matches) {
     if (userId != "creation" && userId != user.id) {
       var count = 0;
       if (!matches[userId].pairs[user.id]) {
+        matches[userId].pairs[user.id] = 0;
+        matches[user.id].pairs[userId] = 0;
         if (
           compareMatches(matches[userId].topics_hear, user.topics_talk) > 0 &&
           compareMatches(matches[userId].segments, user.segments) > 0
