@@ -12,7 +12,7 @@ function matchController(app) {
 
   router.post("/", async (req, res, next) => {
     let user = req.body;
-    user.age = obtainAgeOfBirthday(user.birthday);
+    user.age = obtainAgeOfBirthday(user.birthdate);
     pushUserQueue(user)
       .then(() => {
         setImmediate(match);
