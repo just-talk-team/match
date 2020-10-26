@@ -1,0 +1,8 @@
+.github
+.gitignore
+node_modules
+test
+Dockerfile
+Jenkinsfile
+ecosystem.config.js
+yarn.lock

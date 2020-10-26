@@ -1,6 +1,6 @@
 const Redis = require("ioredis");
 
-const REDIS_URL = process.env.REDIS_URL | 6379;
+const REDIS_URL = process.env.REDIS_URL || 6379;
 const redis = new Redis(REDIS_URL);
 
 function pushUserQueue(user) {
