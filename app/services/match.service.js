@@ -8,6 +8,8 @@ const {
 
 const { compareMatches } = require("../util/user.util");
 
+const axios = require("axios");
+
 async function match() {
   var matches = await getMatches();
   if (isTimeToMatch(matches)) {
@@ -51,7 +53,10 @@ function selectPairs(matches) {
     }
 
     if (bestPair) {
-      notificationUsers.push([userId, bestPair]);
+      notificationUsers.push({
+        idFirstPerson: userId,
+        idSecondPerson: bestPair,
+      });
       delete matches[userId];
       delete matches[bestPair];
     }
@@ -62,7 +67,15 @@ function selectPairs(matches) {
 
 function notifyPairs(notificationPairs) {
   notificationPairs.forEach((pair) => {
-    console.log(pair[0] + "-" + pair[1]);
+    axios
+      .post(process.env.API_NOTIFICATION_DISCOVERY, pair)
+      .then((response) => {
+        console.log(`statusCode: ${response.statusCode}`);
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   });
 }
 
