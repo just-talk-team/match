@@ -35,7 +35,7 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME_MATCH_DEVELOPMENT }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'pull_request' }}
 
   Continuos-Deployment:
     needs: Continuos-Integration
@@ -49,4 +49,4 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME_MATCH_PRODUCTION }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'push' }}
