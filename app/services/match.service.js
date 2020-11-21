@@ -3,7 +3,6 @@ const {
   getMatches,
   setMatches,
   popUserQueue,
-  cleanAllDatabases,
 } = require("../services/redis.service");
 
 const { compareMatches } = require("../util/user.util");
@@ -12,29 +11,49 @@ const axios = require("axios");
 
 async function match() {
   var matches = await getMatches();
-  if (isTimeToMatch(matches)) {
-    const notificationPairs = selectPairs(matches);
-    notifyPairs(notificationPairs);
-    cleanAllDatabases();
-  } else {
-    const user = await popUserQueue();
-    if (user) {
-      matches = addUserToMatches(matches, user);
-      matches = rateUser(matches, user);
-      setMatches(matches);
-    }
+
+  const notificationPairs = selectPairs(matches);
+  notifyPairs(notificationPairs);
+
+  for (const pair in notificationPairs) {
+    delete matches[pair.idFirstPerson];
+    delete matches[pair.idSecondPerson];
+  }
+
+  await setMatches(matches).then(() => {
+    console.log("removeDisconnectedUsers");
+  });
+}
+
+async function evaluate() {
+  var matches = await getMatches();
+
+  const user = await popUserQueue();
+  if (user) {
+    matches = addUserToMatches(matches, user);
+    matches = rateUser(matches, user);
+    await setMatches(matches).then(() => {
+      console.log("evaluate");
+    });
   }
 }
 
-function isTimeToMatch(matches) {
-  if (
-    new Date().getTime() - new Date(matches.creation).getTime() >=
-    rule().time
-  ) {
-    return true;
-  }
+async function removeDisconnectedUsers() {
+  var matches = await getMatches();
 
-  return false;
+  const now = new Date();
+  for (const userId in matches) {
+    const lastConnection = new Date(matches[userId].lastConnection);
+    if (
+      now.getTime() - lastConnection.getTime() >=
+      rule().timeToRemoveDisconnectedUsersInSeconds
+    ) {
+      delete matches[userId];
+    }
+  }
+  await setMatches(matches).then(() => {
+    console.log("removeDisconnectedUsers");
+  });
 }
 
 function selectPairs(matches) {
@@ -67,6 +86,7 @@ function selectPairs(matches) {
 
 function notifyPairs(notificationPairs) {
   notificationPairs.forEach((pair) => {
+    console.log("notifyPairs: ", pair);
     axios
       .post(process.env.API_NOTIFICATION_DISCOVERY, pair)
       .then((response) => {
@@ -81,7 +101,7 @@ function notifyPairs(notificationPairs) {
 
 function rateUser(matches, user) {
   for (const userId in matches) {
-    if (userId != "creation" && userId != user.id) {
+    if (userId != user.id) {
       var count = 0;
       if (!matches[userId].pairs[user.id]) {
         matches[userId].pairs[user.id] = 0;
@@ -132,6 +152,8 @@ function addUserToMatches(matches, user) {
     matches[user.id].pairs = {};
   }
 
+  matches[user.id].lastConnection = new Date();
+
   return matches;
 }
 
@@ -155,4 +177,4 @@ function calculateCountPremium(premium, free) {
   return count;
 }
 
-module.exports = match;
+module.exports = { match, evaluate, removeDisconnectedUsers };

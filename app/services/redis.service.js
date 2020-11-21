@@ -17,7 +17,6 @@ function getMatches() {
   return redis.get("matches").then((value) => {
     if (value == null) {
       let matches = {};
-      matches.creation = new Date();
       return matches;
     }
     return JSON.parse(value);
