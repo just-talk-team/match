@@ -33,5 +33,5 @@ app.listen(port, (err) => {
 setInterval(match, rule().timeToMatchInMiliseconds);
 setInterval(
   removeDisconnectedUsers,
-  rule().timeToRemoveDisconnectedUsersInSeconds
+  rule().timeToRemoveDisconnectedUsersInMiliseconds
 );

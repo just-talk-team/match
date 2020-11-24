@@ -1,7 +1,7 @@
 const express = require("express");
 
-const { pushUserQueue, popUserQueue } = require("../services/redis.service");
-const { match, evaluate } = require("../services/match.service");
+const { pushUserQueue } = require("../services/redis.service");
+const { evaluate } = require("../services/match.service");
 
 const { obtainAgeOfBirthday } = require("../util/user.util");
 
@@ -15,7 +15,6 @@ function matchController(app) {
 
     let user = req.body;
     user.age = obtainAgeOfBirthday(user.birthdate);
-    user.register = new Date();
 
     pushUserQueue(user)
       .then(() => {
