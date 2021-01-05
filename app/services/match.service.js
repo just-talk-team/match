@@ -10,7 +10,9 @@ const { compareMatches } = require("../util/user.util");
 const axios = require("axios");
 
 async function match() {
-  var matches = await getMatches();
+  var matches = await getMatches().catch((error) => {
+    console.error(error);
+  });
 
   const notificationPairs = selectPairs(matches);
   notifyPairs(notificationPairs);
@@ -19,40 +21,45 @@ async function match() {
     delete matches[pair.idFirstPerson];
     delete matches[pair.idSecondPerson];
   }
-
-  await setMatches(matches).then(() => {
-    console.log("removeDisconnectedUsers");
+  await setMatches(matches).catch((error) => {
+    console.error(error);
   });
 }
 
 async function evaluate() {
-  var matches = await getMatches();
+  var matches = await getMatches().catch((error) => {
+    console.error(error);
+  });
 
-  const user = await popUserQueue();
+  const user = await popUserQueue().catch((error) => {
+    console.error(error);
+  });
   if (user) {
     matches = addUserToMatches(matches, user);
     matches = rateUser(matches, user);
-    await setMatches(matches).then(() => {
-      console.log("evaluate");
+    await setMatches(matches).catch((error) => {
+      console.error(error);
     });
   }
 }
 
 async function removeDisconnectedUsers() {
-  var matches = await getMatches();
+  var matches = await getMatches().catch((error) => {
+    console.error(error);
+  });
 
   const now = new Date();
   for (const userId in matches) {
     const lastConnection = new Date(matches[userId].lastConnection);
     if (
       now.getTime() - lastConnection.getTime() >=
-      rule().timeToRemoveDisconnectedUsersInSeconds
+      rule().timeToRemoveDisconnectedUsersInMiliseconds
     ) {
       delete matches[userId];
     }
   }
-  await setMatches(matches).then(() => {
-    console.log("removeDisconnectedUsers");
+  await setMatches(matches).catch((error) => {
+    console.error(error);
   });
 }
 
@@ -86,16 +93,9 @@ function selectPairs(matches) {
 
 function notifyPairs(notificationPairs) {
   notificationPairs.forEach((pair) => {
-    console.log("notifyPairs: ", pair);
-    axios
-      .post(process.env.API_NOTIFICATION_DISCOVERY, pair)
-      .then((response) => {
-        console.log(`statusCode: ${response.statusCode}`);
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    axios.post(process.env.API_NOTIFICATION_DISCOVERY, pair).catch((error) => {
+      console.error(error);
+    });
   });
 }
 
@@ -107,12 +107,12 @@ function rateUser(matches, user) {
         matches[userId].pairs[user.id] = 0;
         matches[user.id].pairs[userId] = 0;
         if (
-          compareMatches(matches[userId].topics_hear, user.topics_talk) > 0 &&
+          compareMatches(matches[userId].topics_talk, user.topics_hear) > 0 &&
           compareMatches(matches[userId].segments, user.segments) > 0
         ) {
           count += compareMatches(
-            matches[userId].topics_hear,
-            user.topics_talk
+            matches[userId].topics_talk,
+            user.topics_hear
           );
           count += compareMatches(matches[userId].segments, user.segments);
           if (matches[userId].user_type == "premium") {
@@ -135,7 +135,7 @@ function rateUser(matches, user) {
           continue;
         }
       } else {
-        count += compareMatches(matches[userId].topics_hear, user.topics_talk);
+        count += compareMatches(matches[userId].topics_talk, user.topics_hear);
 
         matches[userId].pairs[user.id] = matches[userId].pairs[user.id] + count;
         matches[user.id].pairs[userId] = matches[user.id].pairs[userId] + count;
@@ -150,6 +150,12 @@ function addUserToMatches(matches, user) {
   if (!matches[user.id]) {
     matches[user.id] = user;
     matches[user.id].pairs = {};
+  } else {
+    matches[user.id].user_type = user.user_type;
+    matches[user.id].badges = user.badges;
+    matches[user.id].segments = user.segments;
+    matches[user.id].topics_talk = user.topics_talk;
+    matches[user.id].preferences = user.preferences;
   }
 
   matches[user.id].lastConnection = new Date();

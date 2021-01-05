@@ -5,7 +5,7 @@ function rule() {
 
   const rule = {};
   rule.timeToMatchInMiliseconds = 1000 * timeToMatchInSeconds;
-  rule.timeToRemoveDisconnectedUsersInSeconds =
+  rule.timeToRemoveDisconnectedUsersInMiliseconds =
     1000 * timeToRemoveDisconnectedUsersInSeconds;
 
   return rule;
